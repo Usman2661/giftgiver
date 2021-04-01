@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { max_number } from '../helper';
 import Gift from './Gift';
 
 
@@ -15,11 +16,14 @@ class App extends Component {
 
     addGift = () => {
         const { gifts } = this.state;
+        
+        gifts.push({id: max_number(this.state.gifts.map(gift => gift.id))+1});
 
-        const ids = this.state.gifts.map(gift => gift.id);
+        this.setState({gifts});
+    }
 
-        const max_id = ids.length >0 ? Math.max(...ids) : 0;
-        gifts.push({id: max_id+1});
+    removeGift = (id) => { 
+        const gifts = this.state.gifts.filter(gift => gift.id !==id );
 
         this.setState({gifts});
     }
@@ -35,7 +39,11 @@ class App extends Component {
                     {
                         gifts.map(gift => {
                             return (
-                                <Gift key={gift.id} />
+                                <Gift key={gift.id} 
+                                gift={gift}
+                                removeGift={this.removeGift}
+                                />
+
                             )
                         })
                     }
